@@ -197,15 +197,19 @@ class SingleRecSelectBalanceDatasetPrecombine(Dataset):
     
 class SyllableDataset(Dataset): 
     def __init__(self, src_dir, guide_, select=[], mapper=None, transform=None): 
-        guide_file = pd.read_csv(guide_, engine='python', on_bad_lines="warn")
+        guide_file = pd.read_csv(guide_)
+
+        guide_file["syllable_stress_type"] = guide_file["syllable_stress_type"].astype(str)
 
         guide_file = guide_file[guide_file["syllable_stress_type"].isin(select)]
-        # guide_file = guide_file[guide_file['nSample'] > 400]
+        guide_file = guide_file[guide_file['syllable_nSample'] > 400]
         # guide_file = guide_file[guide_file['nSample'] <= 8000]
 
+        guide_new_file = guide_file[["syllable_path", "syllable_stress_type", "suid"]].groupby('suid').first().reset_index()
 
-        path_col = guide_file["syllable_path"]
-        gt_col = guide_file["syllable_stress_type"]
+
+        path_col = guide_new_file["syllable_path"]
+        gt_col = guide_new_file["syllable_stress_type"]
 
         self.dataset = path_col.tolist()
         self.gt_set = gt_col.tolist()

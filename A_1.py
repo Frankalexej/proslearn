@@ -90,7 +90,7 @@ def load_data(type="f", sel="full", load="train"):
     # mymap = TokenMap(mylist)
     if load == "train": 
         train_ds = ThisDataset(train_cut_syllable_, 
-                            os.path.join(src_eng_, "guide_train_complete.csv"), 
+                            os.path.join(src_eng_, "guide_train_mod.csv"), 
                             select=select, 
                             mapper=mymap, 
                             transform=mytrans)
@@ -104,7 +104,7 @@ def load_data(type="f", sel="full", load="train"):
         return train_loader
     elif load == "valid":
         valid_ds = ThisDataset(train_cut_syllable_, 
-                            os.path.join(src_eng_, "guide_validation_complete.csv"), 
+                            os.path.join(src_eng_, "guide_validation_mod.csv"), 
                             select=select, 
                             mapper=mymap,
                             transform=mytrans)
@@ -477,12 +477,12 @@ if __name__ == "__main__":
                                                                     ["full"], 
                                                                     [0.01]):
                 train_ds = ThisDataset(train_cut_syllable_, 
-                                    os.path.join(src_eng_, "guide_train_complete.csv"), 
+                                    os.path.join(src_eng_, "guide_train_mod.csv"), 
                                     select=select, 
                                     mapper=mymap, 
                                     transform=mytrans)
                 valid_ds = ThisDataset(train_cut_syllable_, 
-                                    os.path.join(src_eng_, "guide_validation_complete.csv"), 
+                                    os.path.join(src_eng_, "guide_validation_mod.csv"), 
                                     select=select, 
                                     mapper=mymap,
                                     transform=mytrans)

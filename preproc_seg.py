@@ -17,14 +17,17 @@ def segment_sentence(au_, ca_, name, starttimes, endtimes, suids):
     PU.mk(ca_name_)
 
     for idx, (starttime, endtime, suid) in enumerate(zip(starttimes, endtimes, suids)): 
-        # Extract and save audio segment
-        waveform, sample_rate = torchaudio.load(audio_file)
-        start_sample = AudioCut.time2frame(starttime, sample_rate)
-        end_sample = AudioCut.time2frame(endtime, sample_rate)
-        cut_audio = waveform[:, start_sample:end_sample]
+        try: 
+            # Extract and save audio segment
+            waveform, sample_rate = torchaudio.load(audio_file)
+            start_sample = AudioCut.time2frame(starttime, sample_rate)
+            end_sample = AudioCut.time2frame(endtime, sample_rate)
+            cut_audio = waveform[:, start_sample:end_sample]
 
-        ca_file = os.path.join(ca_name_, suid + ".flac")
-        torchaudio.save(ca_file, cut_audio, sample_rate)
+            ca_file = os.path.join(ca_name_, suid + ".flac")
+            torchaudio.save(ca_file, cut_audio, sample_rate)
+        except Exception: 
+            pass
     return None
 
 def segment(work_list, df, dir_au, dir_ca): 
