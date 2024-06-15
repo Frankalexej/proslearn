@@ -286,3 +286,44 @@ class LSTMNetwork(nn.Module):
         output = nn.Softmax(dim=1)(output)
         preds = torch.argmax(output, dim=1)
         return preds
+
+
+
+############################################# CNN-Direct Model #############################################
+class CNNDirectNetworkSmall(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Sequential(
+            nn.Conv1d(1, 128, kernel_size=244, stride=4), 
+            nn.BatchNorm1d(128), 
+            nn.ReLU(), 
+            nn.MaxPool1d(kernel_size=4)
+        )
+        self.ap = nn.AdaptiveAvgPool1d(output_size=1)
+        self.lin = nn.Linear(in_features=128, out_features=39)
+        
+        self.conv.apply(self.init_conv_weights)
+        self.lin.apply(self.init_lin_weights)
+
+    def init_lin_weights(self, m):
+        if isinstance(m, nn.Linear):
+            # torch.nn.init.xavier_normal_(m.weight)
+            torch.nn.init.kaiming_normal_(m.weight, a=0.1)
+            m.bias.data.fill_(0.01)
+    
+    def init_conv_weights(self, m):
+        if isinstance(m, nn.Conv1d):
+            torch.nn.init.kaiming_normal_(m.weight, a=0.1)
+            m.bias.data.zero_()
+
+    def forward(self, x):
+        x = self.conv(x)
+        x = self.ap(x)
+        x = x.view(x.shape[0], -1)
+        x = self.lin(x)
+        return x
+
+    def predict_on_output(self, output): 
+        output = nn.Softmax(dim=1)(output)
+        preds = torch.argmax(output, dim=1)
+        return preds
