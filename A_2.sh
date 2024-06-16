@@ -14,7 +14,7 @@ generate_random_number() {
 ps=('l' 'h')
 # ps=('l')
 ms=('small')
-pres=(1)
+pres=(0 1 2 3 4 5 10 15 20)
 # pres=(1)
 ss=('full')
 
