@@ -9,7 +9,7 @@ import numpy as np
 import scipy.signal
 import matplotlib.pyplot as plt
 # import simpleaudio as sa
-import soundfile as sf
+# import soundfile as sf
 
 
 def butterworth_filter(signal, sample_rate, cutoff_frequency, filter_type, order):

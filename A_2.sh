@@ -20,7 +20,7 @@ ss=('full')
 
 # Generate a 10-digit random number
 # ts=$(date +"%m%d%H%M%S")
-ts="0324233831"
+ts="0615191433"
 echo "Timestamp: $ts"
 # ts="0121181130"
 

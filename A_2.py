@@ -66,7 +66,7 @@ def load_data(type="f", sel="full", load="train"):
             # torchaudio.transforms.AmplitudeToDB(stype="power", top_db=80), 
             # NormalizerKeepShape(NormalizerKeepShape.norm_mvn)
         )
-    if type == "l-s-5":
+    elif type == "l-s-5":
         mytrans = nn.Sequential(
             Padder(sample_rate=TrainingConfigs.REC_SAMPLE_RATE, pad_len_ms=250, noise_level=1e-4), 
             SoftXpassFilter(cutoff_frequency=4000, sample_rate=16000, filter_type='low', order=2, low_boost_freq=250, low_boost_gain=5)
@@ -87,6 +87,10 @@ def load_data(type="f", sel="full", load="train"):
             #                                     power=2), 
             # torchaudio.transforms.AmplitudeToDB(stype="power", top_db=80), 
             # NormalizerKeepShape(NormalizerKeepShape.norm_mvn)
+        )
+    elif type == "f": 
+        mytrans = nn.Sequential(
+            Padder(sample_rate=TrainingConfigs.REC_SAMPLE_RATE, pad_len_ms=250, noise_level=1e-4)
         )
     else: 
         raise Exception("Type not defined!")
