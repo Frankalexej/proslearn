@@ -8,7 +8,7 @@
 import numpy as np
 import scipy.signal
 import matplotlib.pyplot as plt
-import simpleaudio as sa
+# import simpleaudio as sa
 import soundfile as sf
 
 
@@ -142,51 +142,52 @@ def boost_low_frequencies(audio, fs, cutoff_freq, boost_db):
     return boosted_audio
 
 
-# Example usage
-sound, sample_rate = read_wav_file('sa.wav')
-#play_sound(sound,sample_rate)
+if __name__ == "__main__":
+    # Example usage
+    sound, sample_rate = read_wav_file('sa.wav')
+    #play_sound(sound,sample_rate)
 
 
-# if pre-emphasis
-sound = boost_low_frequencies(sound,fs=sample_rate,cutoff_freq=2000,boost_db=12)
-#play_sound(sound,sample_rate)
-#export_to_wav(sound,sample_rate,"preemphasis.wav")
+    # if pre-emphasis
+    sound = boost_low_frequencies(sound,fs=sample_rate,cutoff_freq=2000,boost_db=12)
+    #play_sound(sound,sample_rate)
+    #export_to_wav(sound,sample_rate,"preemphasis.wav")
 
-# Low-pass filter
-low_pass_cutoff = 4000 # Hz
-low_pass_order = 2 # 12dB/octave
-low_pass_signal = butterworth_filter(sound, sample_rate, low_pass_cutoff, 'low', low_pass_order)
+    # Low-pass filter
+    low_pass_cutoff = 4000 # Hz
+    low_pass_order = 2 # 12dB/octave
+    low_pass_signal = butterworth_filter(sound, sample_rate, low_pass_cutoff, 'low', low_pass_order)
 
-# High-pass filter
-high_pass_cutoff =4000  # Hz
-high_pass_order = 2 # 12dB/octave
-high_pass_signal = butterworth_filter(sound, sample_rate, high_pass_cutoff, 'high', high_pass_order)
+    # High-pass filter
+    high_pass_cutoff =4000  # Hz
+    high_pass_order = 2 # 12dB/octave
+    high_pass_signal = butterworth_filter(sound, sample_rate, high_pass_cutoff, 'high', high_pass_order)
 
-# Visualize the spectrum of the input signal (white noise)
-#visualize_spectrum(sound, sample_rate, 'Spectrum of Original sound')
+    # Visualize the spectrum of the input signal (white noise)
+    #visualize_spectrum(sound, sample_rate, 'Spectrum of Original sound')
 
-# Visualize the spectrum of the low-pass filtered signal
-#visualize_spectrum(low_pass_signal, sample_rate, 'Spectrum of Low-Pass Filtered Signal')
+    # Visualize the spectrum of the low-pass filtered signal
+    #visualize_spectrum(low_pass_signal, sample_rate, 'Spectrum of Low-Pass Filtered Signal')
 
-# Visualize the spectrum of the high-pass filtered signal
-#visualize_spectrum(high_pass_signal, sample_rate, 'Spectrum of High-Pass Filtered Signal')
+    # Visualize the spectrum of the high-pass filtered signal
+    #visualize_spectrum(high_pass_signal, sample_rate, 'Spectrum of High-Pass Filtered Signal')
 
-# Play the original white noise
-#print("Playing original white noise...")
-#play_sound(sound, sample_rate)
+    # Play the original white noise
+    #print("Playing original white noise...")
+    #play_sound(sound, sample_rate)
 
-# Export the signals to WAV files
-#export_to_wav(sound, sample_rate, 'sound.wav')
-export_to_wav(low_pass_signal, sample_rate, 'low_pass_signal.wav')
-export_to_wav(high_pass_signal, sample_rate, 'high_pass_signal.wav')
+    # Export the signals to WAV files
+    #export_to_wav(sound, sample_rate, 'sound.wav')
+    export_to_wav(low_pass_signal, sample_rate, 'low_pass_signal.wav')
+    export_to_wav(high_pass_signal, sample_rate, 'high_pass_signal.wav')
 
-###
+    ###
 
-'''1st order Butterworth filter: 6 dB/octave
-2nd order Butterworth filter: 12 dB/octave
-3rd order Butterworth filter: 18 dB/octave
-4th order Butterworth filter: 24 dB/octave
-5th order Butterworth filter: 30 dB/octave
-6th order Butterworth filter: 36 dB/octave
-7th order Butterworth filter: 42 dB/octave
-8th order Butterworth filter: 48 dB/octave'''
+    '''1st order Butterworth filter: 6 dB/octave
+    2nd order Butterworth filter: 12 dB/octave
+    3rd order Butterworth filter: 18 dB/octave
+    4th order Butterworth filter: 24 dB/octave
+    5th order Butterworth filter: 30 dB/octave
+    6th order Butterworth filter: 36 dB/octave
+    7th order Butterworth filter: 42 dB/octave
+    8th order Butterworth filter: 48 dB/octave'''
