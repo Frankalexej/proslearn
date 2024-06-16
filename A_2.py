@@ -34,7 +34,7 @@ from model_configs import ModelDimConfigs, TrainingConfigs
 from misc_tools import get_timestamp, ARPABET
 from model_dataset import DS_Tools, Padder, TokenMap, NormalizerKeepShape
 from model_dataset import SyllableDataset as ThisDataset
-from model_filter import XpassFilter
+from model_filter import XpassFilter, SoftXpassFilter
 from paths import *
 from misc_progress_bar import draw_progress_bar
 from misc_recorder import *
@@ -66,9 +66,10 @@ def load_data(type="f", sel="full", load="train"):
             # torchaudio.transforms.AmplitudeToDB(stype="power", top_db=80), 
             # NormalizerKeepShape(NormalizerKeepShape.norm_mvn)
         )
-    else: 
+    if type == "l-s-5":
         mytrans = nn.Sequential(
             Padder(sample_rate=TrainingConfigs.REC_SAMPLE_RATE, pad_len_ms=250, noise_level=1e-4), 
+            SoftXpassFilter(cutoff_frequency=4000, sample_rate=16000, filter_type='low', order=2, low_boost_freq=250, low_boost_gain=5)
             # torchaudio.transforms.MelSpectrogram(TrainingConfigs.REC_SAMPLE_RATE, 
             #                                     n_mels=TrainingConfigs.N_MELS, 
             #                                     n_fft=TrainingConfigs.N_FFT, 
@@ -76,6 +77,19 @@ def load_data(type="f", sel="full", load="train"):
             # torchaudio.transforms.AmplitudeToDB(stype="power", top_db=80), 
             # NormalizerKeepShape(NormalizerKeepShape.norm_mvn)
         )
+    elif type == "h-s-5": 
+        mytrans = nn.Sequential(
+            Padder(sample_rate=TrainingConfigs.REC_SAMPLE_RATE, pad_len_ms=250, noise_level=1e-4), 
+            SoftXpassFilter(cutoff_frequency=4000, sample_rate=16000, filter_type='high', order=2, low_boost_freq=250, low_boost_gain=5)
+            # torchaudio.transforms.MelSpectrogram(TrainingConfigs.REC_SAMPLE_RATE, 
+            #                                     n_mels=TrainingConfigs.N_MELS, 
+            #                                     n_fft=TrainingConfigs.N_FFT, 
+            #                                     power=2), 
+            # torchaudio.transforms.AmplitudeToDB(stype="power", top_db=80), 
+            # NormalizerKeepShape(NormalizerKeepShape.norm_mvn)
+        )
+    else: 
+        raise Exception("Type not defined!")
     # with open(os.path.join(src_, "no-stress-seg.dict"), "rb") as file:
     #     # Load the object from the file
     #     mylist = pickle.load(file)

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from equalizer import butterworth_filter
+from equalizer import butterworth_filter, boost_low_frequencies
 
 def lowpass_filter(audio,fs,cut_off_upper, cut_off_lower=0):
     # audio is data after reading in using tools like torchaudio.load or scipy.io.wavefile
@@ -66,17 +66,21 @@ class XpassFilter(nn.Module):
     
 
 class SoftXpassFilter(nn.Module):
-    def __init__(self, cutoff_frequency, sample_rate=16000, filter_type='low', order=2):
+    def __init__(self, cutoff_frequency, sample_rate=16000, filter_type='low', order=2, low_boost_freq=250, low_boost_gain=0):
         super(SoftXpassFilter, self).__init__()
         self.cutoff_frequency = cutoff_frequency
         self.sample_rate = sample_rate
         self.filter_type = filter_type
+        self.low_boost_freq = low_boost_freq
+        self.low_boost_gain = low_boost_gain
         self.order = order
 
     def forward(self, audio):
         # audio is a PyTorch tensor with shape (num_channels, num_samples)
         audio_np = audio.detach().cpu().numpy()  # Convert to numpy array
         filtered_audio = []
+        if self.low_boost_freq > 0: # Apply low-frequency boost
+            audio_np = boost_low_frequencies(audio_np, fs=self.sample_rate, cutoff_freq=self.low_boost_freq, boost_db=self.low_boost_gain)
 
         for channel in audio_np:
             filtered_channel = butterworth_filter(channel, self.sample_rate, self.cutoff_frequency, self.filter_type, self.order)
