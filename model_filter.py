@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from equalizer import butterworth_filter
 
 def lowpass_filter(audio,fs,cut_off_upper, cut_off_lower=0):
     # audio is data after reading in using tools like torchaudio.load or scipy.io.wavefile
@@ -62,3 +63,24 @@ class XpassFilter(nn.Module):
 
         y = torch.fft.irfft(yf, num_samples)
         return y.float()
+    
+
+class SoftXpassFilter(nn.Module):
+    def __init__(self, cutoff_frequency, sample_rate=16000, filter_type='low', order=2):
+        super(SoftXpassFilter, self).__init__()
+        self.cutoff_frequency = cutoff_frequency
+        self.sample_rate = sample_rate
+        self.filter_type = filter_type
+        self.order = order
+
+    def forward(self, audio):
+        # audio is a PyTorch tensor with shape (num_channels, num_samples)
+        audio_np = audio.detach().cpu().numpy()  # Convert to numpy array
+        filtered_audio = []
+
+        for channel in audio_np:
+            filtered_channel = butterworth_filter(channel, self.sample_rate, self.cutoff_frequency, self.filter_type, self.order)
+            filtered_audio.append(filtered_channel)
+
+        filtered_audio_np = np.stack(filtered_audio)
+        return torch.from_numpy(filtered_audio_np).to(audio.device)
