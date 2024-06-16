@@ -87,4 +87,4 @@ class SoftXpassFilter(nn.Module):
             filtered_audio.append(filtered_channel)
 
         filtered_audio_np = np.stack(filtered_audio)
-        return torch.from_numpy(filtered_audio_np).to(audio.device)
+        return torch.from_numpy(filtered_audio_np).to(audio.device).float()
